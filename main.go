@@ -1,6 +1,7 @@
 package main
 
 import (
+	"go-web/handler"
 	"log"
 	"net/http"
 )
@@ -12,14 +13,11 @@ func main() {
 		w.Write([]byte("About page"))
 	}
 
-	// function outside of main
-	mux.HandleFunc("/", homeHandler)
-	mux.HandleFunc("/selena", selenaHandler)
+	mux.HandleFunc("/", handler.HomeHandler)
+	mux.HandleFunc("/selena", handler.SelenaHandler)
+	mux.HandleFunc("/product", handler.ProductHandler)
 
-	// function inside of main
 	mux.HandleFunc("/about", aboutHandler)
-
-	// function inside of HandleFunc
 	mux.HandleFunc("/contact", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Contact page"))
 	})
@@ -30,15 +28,3 @@ func main() {
 	log.Fatal(err)
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.URL.Path)
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
-	}
-	w.Write([]byte("Hellow home, I'm learning Golang web"))
-}
-
-func selenaHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Selena from Land of Dawn"))
-}
